@@ -7,7 +7,7 @@ const axios = realAxios.create({
 axios.interceptors.response.use((response) => {
     return response.data;
 }, (error) => {
-    console.log({ status: false, data: error?.response?.data?.error });
+    console.log({ status: false, data: error});
 });
 
 module.exports = axios;

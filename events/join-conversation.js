@@ -4,16 +4,12 @@ module.exports = {
         const allowed = await utils.checkUserGroup(payload.token, payload.id);
         
         if(allowed) {
-
             const decodedPayload = await utils.decodeToken(payload.token);
             utils.users.set(decodedPayload.id, socket)
 
-            console.log(`User ${decodedPayload.id} joined group ${payload.id}`);
+            console.log(`User ${decodedPayload.id} joined conversation ${payload.id}`);
 
-            socket.join(`group#${payload?.id}`)
-            socket.emit("join-response", {result: true});
-        } else {
-            socket.emit("join-response", {result: false});
+            socket.join(`conversation#${payload?.id}`)
         }
 
     }

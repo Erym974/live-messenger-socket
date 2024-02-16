@@ -1,11 +1,7 @@
 module.exports = {
     exec: async (io, socket, utils, payload) => {
-
-        utils.isAuthenticated(socket)
-        utils.checkUserGroup(socket, payload)
-        const user = utils.getUserBySocket(socket.id)
-        console.log("Room leaved : " + payload + " by " + user.fullname);
-        socket.join(payload)
-
+        const user = await utils.findUserIdBySocket(socket.id);
+        console.log(`User ${user} left group ${payload}`);
+        socket.leave(payload);
     }
 }

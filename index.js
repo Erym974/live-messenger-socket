@@ -25,30 +25,34 @@ const events = fs.readdirSync(__dirname + '/events').map((file) => file.replace(
 
 const utils = {
     users: new Map(),
-    checkUserGroup: async function(socket, group) {
-        const user = this.getUserBySocket(socket.id);
-        if(!user) return false
+    checkUserGroup: async function(token, group) {
         const response = await axios.get(`api/groups/${group}`, {
             headers: {
-                Authorization: `Bearer ${user.token}`
+                Authorization: `Bearer ${token}`
             }
         })
-        return response.status
+        return response?.status ?? false
     },
-    isAuthenticated : async function(socket) {
-        const user = this.getUserBySocket(socket.id);
-        if(!user) return false
-        return true
+    decodeToken: (jwt) => {
+        const base64Url = jwt.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+    
+        return JSON.parse(jsonPayload);
     },
-    getUserBySocket: function(socket) {
-        for (const [key, value] of this.users.entries()) {
-            if(value.socket === socket) {
-                return value;
-            }
+    findUserBySocket: (socket) => {
+        for (let [id, s] of utils.users) {
+            if(s.id === socket) return utils.users.get(id);
         }
+        return null;
     },
-    getUserById: function(id) {
-        return this.users.get(id)
+    findUserIdBySocket: (socket) => {
+        for (let [id, s] of utils.users) {
+            if(s.id === socket) return id;
+        }
+        return null;
     }
 }
 
