@@ -8,16 +8,30 @@ const fs = require('fs');
 
 app.use(cors());
 
+app.get('/', (req, res) => {
+    res.json({ status: true, datas: { "SOCKET": "Connected" } })
+});
+
 const server = http.createServer(app);
+
+
 
 const io = new Server(server, {
     cors: {
-        origin: '*',
+        origin: [
+            'http://localhost:3000',
+            'http://swiftchat.local:3000',
+            'http://swiftchat.fr',
+            'https://swiftchat.fr',
+            'http://www.swiftchat.fr',
+            'https://www.swiftchat.fr',
+        ],
         methods: ['GET', 'POST']
     }
 });
 
 server.listen(3001, () => {
+    console.clear();
     console.log('listening on *:3001');
 })
 
@@ -26,7 +40,7 @@ const events = fs.readdirSync(__dirname + '/events').map((file) => file.replace(
 const utils = {
     users: new Map(),
     checkUserGroup: async function(token, group) {
-        const response = await axios.get(`api/groups/${group}`, {
+        const response = await axios.get(`/groups/${group}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -34,6 +48,7 @@ const utils = {
         return response?.status ?? false
     },
     decodeToken: (jwt) => {
+        if(!jwt) return ""
         const base64Url = jwt.split('.')[1];
         const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
         const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
@@ -53,6 +68,9 @@ const utils = {
             if(s.id === socket) return id;
         }
         return null;
+    },
+    findSocketById: (id) => {
+        return utils.users.get(id);
     }
 }
 

@@ -1,7 +1,7 @@
 const realAxios = require('axios');
 
 const axios = realAxios.create({
-    baseURL: 'http://127.0.0.1:8000/',
+    baseURL: 'http://api.swiftchat.local:8000/',
 });
 
 axios.interceptors.response.use((response) => {

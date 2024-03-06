@@ -3,7 +3,7 @@ const axios = require("../axios");
 module.exports = {
     exec: async (io, socket, utils, payload) => {
 
-        const response = await axios.post(`/api/members/${payload.id}`, { action: "kick", member: payload.user }, { headers: { Authorization: `Bearer ${payload.token}` } })
+        const response = await axios.post(`/members/${payload.id}`, { action: "kick", member: payload.user }, { headers: { Authorization: `Bearer ${payload.token}` } })
 
         if(response.status) {
 
@@ -16,7 +16,7 @@ module.exports = {
                 userSocket.emit('kicked', group)
             }
 
-            io.to(roomName).emit('group-updated', group)
+            io.to(roomName).emit(`group-updated#${payload.id}`, group)
 
         }
 
