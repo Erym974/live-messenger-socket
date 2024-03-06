@@ -79,7 +79,7 @@ io.on('connection', socket => {
     console.log("New connection");
 
     events.forEach(eventName => {
-        let event = require(__dirname + `/Events/${eventName}.js`);
+        let event = require(__dirname + `/events/${eventName}.js`);
         socket.on(eventName, (payload) => {
             event.exec(io, socket, utils, payload)
         })
