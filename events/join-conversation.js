@@ -1,15 +1,16 @@
 module.exports = {
     exec: async (io, socket, utils, payload) => {
 
-        const allowed = await utils.checkUserGroup(payload.token, payload.id);
-        
-        if(allowed) {
-            const decodedPayload = await utils.decodeToken(payload.token);
-            utils.users.set(decodedPayload.id, socket)
+        const decodedPayload = await utils.decodeToken(payload.token);
+        const groups = payload.groups
 
-            console.log(`User ${decodedPayload.id} joined conversation ${payload.id}`);
+        for (const group of groups) {
+            const allowed = await utils.checkUserGroup(payload.token, group);
 
-            socket.join(`conversation#${payload?.id}`)
+            if(allowed) {
+                console.log(`User ${decodedPayload.id} joined conversation ${group}`);
+                socket.join(`conversation#${group}`)
+            }
         }
 
     }
