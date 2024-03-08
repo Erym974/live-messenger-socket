@@ -12,6 +12,7 @@ module.exports = {
 
             socket.join(`group#${payload?.id}`)
             socket.emit("join-response", {result: true});
+            
         } else {
             socket.emit("join-response", {result: false});
         }
