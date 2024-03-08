@@ -1,7 +1,4 @@
 const axios = require("../axios");
-const fs = require('fs');
-const ba64 = require("ba64");
-const FormData = require('form-data');
 
 module.exports = {
     exec: async (io, socket, utils, payload) => {
