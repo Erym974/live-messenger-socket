@@ -40,6 +40,17 @@ const events = fs.readdirSync(__dirname + '/events').map((file) => file.replace(
 const utils = {
     users: new Map(),
     onlines: new Map(),
+    authenticateToken: async function(token) {
+
+        const response = await axios.get('/users/me', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+
+        return response?.status ?? false
+
+    },
     checkUserGroup: async function(token, group) {
         const response = await axios.get(`/groups/${group}`, {
             headers: {

@@ -11,7 +11,7 @@ module.exports = {
             const group = response.datas
 
             payload.members.forEach(member => {
-                io.to(`user#${member}`).emit('new-group')
+                io.to(`user#${member}`).emit('new-group', group)
             })
 
             io.to(roomName).emit(`group-updated#${payload.id}`, group)
